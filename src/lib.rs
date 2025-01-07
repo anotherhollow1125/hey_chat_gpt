@@ -321,3 +321,69 @@ pub fn あとは任せた(input: TokenStream) -> TokenStream {
         .unwrap_or_else(Error::into_compile_error)
         .into()
 }
+
+// Define aliases for other phrases.
+macro_rules! define_macro_aliases {
+    ($doc_comment:literal, $message:ident, [$($alias:ident),* $(,)?]) => {
+        $(
+            #[doc = $doc_comment]
+            #[proc_macro]
+            pub fn $alias(input: TokenStream) -> TokenStream {
+                let input = syn::parse_macro_input!(input as impls::MacroInput);
+
+                impls::take_care_of_the_rest(input, $message)
+                    .unwrap_or_else(Error::into_compile_error)
+                    .into()
+            }
+        )*
+    };
+}
+// English aliases
+define_macro_aliases!(
+    " An alias for [`take_care_of_the_rest`](crate::take_care_of_the_rest!).",
+    ENGLISH_MESSAGE,
+    [
+        do_it,
+        go_ahead,
+        try_it,
+        just_do_it,
+        give_it_a_go,
+        help_me,
+        lend_a_hand,
+        back_me_up,
+        save_me,
+        magic,
+        abracadabra,
+        wave_your_wand,
+        perform_miracle,
+        finish_it,
+        wrap_it_up,
+        get_it_done,
+        make_it_happen,
+        deliver_it,
+    ]
+);
+// Japanese aliases
+define_macro_aliases!(
+    " [`あとは任せた`](crate::あとは任せた!) へのエイリアス。",
+    JAPANESE_MESSAGE,
+    [
+        やって,
+        これやって,
+        進めて,
+        頼む,
+        手を貸して,
+        助けて,
+        手伝って,
+        魔法を見せて,
+        奇跡を起こして,
+        何とかして,
+        仕上げて,
+        完成させて,
+        終わらせて,
+        最後まで頼む,
+        実現して,
+        作って,
+        やり遂げて,
+    ]
+);
