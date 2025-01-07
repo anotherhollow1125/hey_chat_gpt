@@ -112,12 +112,21 @@ mod impls;
 use proc_macro::TokenStream;
 use syn::Error;
 
-const ENGLISH_MESSAGE: &'static str = r#"I'm the administrator of this system. You are an AI assistant of this system helping with Rust programming, and you are called through `take_care_of_the_rest` proc-macro. Generate Rust code based on the user's input as proc-macro (`take_care_of_the_rest` macro) output. Ensure the code is idiomatic, adheres to Rust best practices, and includes comments for clarity. All your answers will be treated as `String` values and converted to `proc_macro2::TokenStream` , so your answers must be valid Rust code. **Anything that is not Rust code must be in a comment, and you must not output anything that would prevent the conversion. And User input other than macros remains, so be careful not to create duplicates. (For example, if you output a main function, it may conflict with a user-defined main function and cause a compilation error. Or `take_care_of_the_rest` macro may be called from within the main function, in which case you should not print the main function itself.)**. What follows is inputs of the user who uses this system:
+fn english_message(macro_name: &str) -> String {
+    format!(
+        r#"I'm the administrator of this system. You are an AI assistant of this system helping with Rust programming, and you are called through `{macro_name}` proc-macro. Generate Rust code based on the user's input as proc-macro (`{macro_name}` macro) output. Ensure the code is idiomatic, adheres to Rust best practices, and includes comments for clarity. All your answers will be treated as `String` values and converted to `proc_macro2::TokenStream` , so your answers must be valid Rust code. **Anything that is not Rust code must be in a comment, and you must not output anything that would prevent the conversion. And User input other than macros remains, so be careful not to create duplicates. (For example, if you output a main function, it may conflict with a user-defined main function and cause a compilation error. Or `{macro_name}` macro may be called from within the main function, in which case you should not print the main function itself.)**. What follows is inputs of the user who uses this system:
 
-"#;
-const JAPANESE_MESSAGE: &'static str = r#"私はこのシステムの管理者です。あなたはRustプログラミングを支援する本システムのAIアシスタントであり、`あとは任せた` 手続きマクロを通じて呼び出されます。ユーザーの入力に基づいてRustコードを `あとは任せた` マクロの出力として生成してほしいです。コードはRustのベストプラクティスに従い、明確さを保つための日本語のコメントを含めるようにしてください。回答はすべて `String` 値として扱われ、`proc_macro2::TokenStream` に変換されるため、回答は有効なRustコードである必要があります。**Rustコード以外のものはすべてコメント内に記述する必要があり、Rustコードとして変換しようとするとエラーになるものを出力してはなりません。そして、マクロ以外のユーザー入力はそのまま残るため、重複などをしないように注意してください。(たとえば、 `main` 関数を出力すると、ユーザー定義の `main` 関数と競合してコンパイルエラーが発生する可能性があります。あるいは、 `あとは任せた` マクロはmain関数の中からよばれているかもしれません。その時にmain関数ごと出力してはいけません。)** ここからは本システム利用者の入力になります:
+"#
+    )
+}
 
-"#;
+fn japanese_message(macro_name: &str) -> String {
+    format!(
+        r#"私はこのシステムの管理者です。あなたはRustプログラミングを支援する本システムのAIアシスタントであり、`{macro_name}` 手続きマクロを通じて呼び出されます。ユーザーの入力に基づいてRustコードを `{macro_name}` マクロの出力として生成してほしいです。コードはRustのベストプラクティスに従い、明確さを保つための日本語のコメントを含めるようにしてください。回答はすべて `String` 値として扱われ、`proc_macro2::TokenStream` に変換されるため、回答は有効なRustコードである必要があります。**Rustコード以外のものはすべてコメント内に記述する必要があり、Rustコードとして変換しようとするとエラーになるものを出力してはなりません。そして、マクロ以外のユーザー入力はそのまま残るため、重複などをしないように注意してください。(たとえば、 `main` 関数を出力すると、ユーザー定義の `main` 関数と競合してコンパイルエラーが発生する可能性があります。あるいは、 `{macro_name}` マクロはmain関数の中からよばれているかもしれません。その時にmain関数ごと出力してはいけません。)** ここからは本システム利用者の入力になります:
+
+"#
+    )
+}
 
 /// A macro to delegate implementation to the ChatGPT API.
 ///
@@ -217,7 +226,7 @@ const JAPANESE_MESSAGE: &'static str = r#"私はこのシステムの管理者�
 pub fn take_care_of_the_rest(input: TokenStream) -> TokenStream {
     let input = syn::parse_macro_input!(input as impls::MacroInput);
 
-    impls::take_care_of_the_rest(input, ENGLISH_MESSAGE)
+    impls::take_care_of_the_rest(input, &english_message("take_care_of_the_rest"))
         .unwrap_or_else(Error::into_compile_error)
         .into()
 }
@@ -317,7 +326,73 @@ pub fn take_care_of_the_rest(input: TokenStream) -> TokenStream {
 pub fn あとは任せた(input: TokenStream) -> TokenStream {
     let input = syn::parse_macro_input!(input as impls::MacroInput);
 
-    impls::take_care_of_the_rest(input, JAPANESE_MESSAGE)
+    impls::take_care_of_the_rest(input, &japanese_message("あとは任せた"))
         .unwrap_or_else(Error::into_compile_error)
         .into()
 }
+
+// Define aliases for other phrases.
+macro_rules! define_macro_aliases {
+    ($doc_comment:literal, $message_fn:ident, [$($alias:ident),* $(,)?]) => {
+        $(
+            #[doc = $doc_comment]
+            #[proc_macro]
+            pub fn $alias(input: TokenStream) -> TokenStream {
+                let input = syn::parse_macro_input!(input as impls::MacroInput);
+
+                impls::take_care_of_the_rest(input, &$message_fn(stringify!($alias)))
+                    .unwrap_or_else(Error::into_compile_error)
+                    .into()
+            }
+        )*
+    };
+}
+// English aliases
+define_macro_aliases!(
+    " An alias for [`take_care_of_the_rest`](crate::take_care_of_the_rest!).",
+    english_message,
+    [
+        do_it,
+        go_ahead,
+        try_it,
+        just_do_it,
+        give_it_a_go,
+        help_me,
+        lend_a_hand,
+        back_me_up,
+        save_me,
+        magic,
+        abracadabra,
+        wave_your_wand,
+        perform_miracle,
+        finish_it,
+        wrap_it_up,
+        get_it_done,
+        make_it_happen,
+        deliver_it,
+    ]
+);
+// Japanese aliases
+define_macro_aliases!(
+    " [`あとは任せた`](crate::あとは任せた!) へのエイリアス。",
+    japanese_message,
+    [
+        やって,
+        これやって,
+        進めて,
+        頼む,
+        手を貸して,
+        助けて,
+        手伝って,
+        魔法を見せて,
+        奇跡を起こして,
+        何とかして,
+        仕上げて,
+        完成させて,
+        終わらせて,
+        最後まで頼む,
+        実現して,
+        作って,
+        やり遂げて,
+    ]
+);
