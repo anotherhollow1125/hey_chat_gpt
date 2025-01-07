@@ -33,7 +33,7 @@
 //!
 //! 詳細は各マクロのリンク先で読んでください。
 //!
-//! # Preparation
+//! ## Preparation
 //!
 //! To compile, run the below command.
 //!
@@ -70,11 +70,11 @@
 //! cargo run
 //! ```
 //!
-//! # Cache
+//! ## Cache
 //!
 //! Responses from ChatGPT are stored in the gpt_responses directory and used as a cache when the code remains unchanged. If you get undesirable code or an error response from ChatGPT, remove those cache files before trying to compile again.
 //!
-//! # 使用のための準備
+//! ## 使用のための準備
 //!
 //! コンパイルするには以下を実行します。
 //!
@@ -111,7 +111,7 @@
 //! cargo run
 //! ```
 //!
-//! # キャッシュファイルについて
+//! ## キャッシュファイルについて
 //!
 //! ChatGPTからの返答は `gpt_responses` ディレクトリに保存され、コードが変わらないうちはこちらのキャッシュがコンパイルに利用されます。もし望まない結果になったりエラーレスポンスが帰ってきた場合は、キャッシュファイルを削除の上再コンパイルしてみてください。
 
@@ -231,7 +231,7 @@ fn japanese_message(macro_name: &str) -> String {
 /// cargo run
 /// ```
 ///
-/// # Cache
+/// ## Cache
 ///
 /// Responses from ChatGPT are stored in the gpt_responses directory and used as a cache when the code remains unchanged. If you get undesirable code or an error response from ChatGPT, remove those cache files before trying to compile again.
 #[proc_macro]
@@ -335,7 +335,7 @@ pub fn take_care_of_the_rest(input: TokenStream) -> TokenStream {
 /// cargo run
 /// ```
 ///
-/// # キャッシュファイルについて
+/// ## キャッシュファイルについて
 ///
 /// ChatGPTからの返答は `gpt_responses` ディレクトリに保存され、コードが変わらないうちはこちらのキャッシュがコンパイルに利用されます。もし望まない結果になったりエラーレスポンスが帰ってきた場合は、キャッシュファイルを削除の上再コンパイルしてみてください。
 #[proc_macro]

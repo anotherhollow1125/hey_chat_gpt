@@ -90,7 +90,7 @@ In this case, the options are not necessary.
 cargo run
 ```
 
-# Cache
+## Cache
 
 Responses from ChatGPT are stored in the gpt_responses directory and used as a cache when the code remains unchanged. If you get undesirable code or an error response from ChatGPT, remove those cache files before trying to compile again.
 
@@ -183,6 +183,6 @@ channel = "nightly"
 cargo run
 ```
 
-# キャッシュファイルについて
+## キャッシュファイルについて
 
 ChatGPTからの返答は `gpt_responses` ディレクトリに保存され、コードが変わらないうちはこちらのキャッシュがコンパイルに利用されます。もし望まない結果になったりエラーレスポンスが帰ってきた場合は、キャッシュファイルを削除の上再コンパイルしてみてください。
