@@ -70,6 +70,10 @@
 //! cargo run
 //! ```
 //!
+//! # Cache
+//!
+//! Responses from ChatGPT are stored in the gpt_responses directory and used as a cache when the code remains unchanged. If you get undesirable code or an error response from ChatGPT, remove those cache files before trying to compile again.
+//!
 //! # 使用のための準備
 //!
 //! コンパイルするには以下を実行します。
@@ -106,6 +110,10 @@
 //! ```bash
 //! cargo run
 //! ```
+//!
+//! # キャッシュファイルについて
+//!
+//! ChatGPTからの返答は `gpt_responses` ディレクトリに保存され、コードが変わらないうちはこちらのキャッシュがコンパイルに利用されます。もし望まない結果になったりエラーレスポンスが帰ってきた場合は、キャッシュファイルを削除の上再コンパイルしてみてください。
 
 mod impls;
 
@@ -222,6 +230,10 @@ fn japanese_message(macro_name: &str) -> String {
 /// ```bash
 /// cargo run
 /// ```
+///
+/// # Cache
+///
+/// Responses from ChatGPT are stored in the gpt_responses directory and used as a cache when the code remains unchanged. If you get undesirable code or an error response from ChatGPT, remove those cache files before trying to compile again.
 #[proc_macro]
 pub fn take_care_of_the_rest(input: TokenStream) -> TokenStream {
     let input = syn::parse_macro_input!(input as impls::MacroInput);
@@ -322,6 +334,10 @@ pub fn take_care_of_the_rest(input: TokenStream) -> TokenStream {
 /// ```bash
 /// cargo run
 /// ```
+///
+/// # キャッシュファイルについて
+///
+/// ChatGPTからの返答は `gpt_responses` ディレクトリに保存され、コードが変わらないうちはこちらのキャッシュがコンパイルに利用されます。もし望まない結果になったりエラーレスポンスが帰ってきた場合は、キャッシュファイルを削除の上再コンパイルしてみてください。
 #[proc_macro]
 pub fn あとは任せた(input: TokenStream) -> TokenStream {
     let input = syn::parse_macro_input!(input as impls::MacroInput);
